@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "QR Code Generator"
+version = "1.0.0"
+id = "artifacts/qr-code-generator"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21918
+
+[services.development]
+run = "pnpm --filter @workspace/qr-code-generator run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/qr-code-generator", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/qr-code-generator/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21918"
+BASE_PATH = "/"

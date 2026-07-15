@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+    <title>QR Code Generator</title>
+    <meta
+      name="description"
+      content="Generate a high-quality QR code from any URL, instantly, right in your browser. Download or copy — works completely offline."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="QR Code Generator" />
+    <meta
+      property="og:description"
+      content="Generate a high-quality QR code from any URL, instantly, right in your browser."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="QR Code Generator" />
+    <meta
+      name="twitter:description"
+      content="Generate a high-quality QR code from any URL, instantly, right in your browser."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- No external fonts/CDNs on purpose: the page must keep working fully offline. -->
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <!-- Theme toggle -->
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        title="Toggle dark mode"
+      >
+        <svg
+          class="icon icon-sun"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path
+            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+          ></path>
+        </svg>
+        <svg
+          class="icon icon-moon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <main class="app">
+        <header class="app-header">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                <path d="M14 14h3v3M20 14v3h-3M14 20h3M17 17h3"></path>
+              </svg>
+            </span>
+            <h1>QR Code Generator</h1>
+          </div>
+          <p class="subtitle">
+            Paste a link, get an instant QR code. Nothing leaves your browser.
+          </p>
+        </header>
+
+        <!-- Input card -->
+        <section class="card input-card" aria-labelledby="url-label">
+          <label id="url-label" class="field-label" for="url-input"
+            >Website URL</label
+          >
+          <div class="input-row">
+            <input
+              id="url-input"
+              class="text-input"
+              type="text"
+              inputmode="url"
+              autocomplete="url"
+              spellcheck="false"
+              placeholder="https://example.com"
+              aria-describedby="error-message"
+            />
+          </div>
+
+          <p id="error-message" class="error-message" role="alert" hidden></p>
+
+          <div class="button-row">
+            <button id="generate-btn" class="btn btn-primary" type="button">
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+              </svg>
+              Generate QR Code
+            </button>
+            <button id="clear-btn" class="btn btn-ghost" type="button">
+              Clear
+            </button>
+          </div>
+        </section>
+
+        <!-- Result card (hidden until a QR code exists) -->
+        <section id="result-card" class="card result-card" hidden>
+          <div class="qr-frame">
+            <canvas
+              id="qr-canvas"
+              width="280"
+              height="280"
+              aria-label="Generated QR code"
+            ></canvas>
+          </div>
+
+          <p id="result-url" class="result-url"></p>
+
+          <div class="button-row result-actions">
+            <button id="download-btn" class="btn btn-secondary" type="button">
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 3v12"></path>
+                <path d="M7 10l5 5 5-5"></path>
+                <path d="M5 21h14"></path>
+              </svg>
+              Download PNG
+            </button>
+            <button id="copy-btn" class="btn btn-secondary" type="button">
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                ></path>
+              </svg>
+              Copy Link
+            </button>
+          </div>
+        </section>
+
+        <p id="toast" class="toast" role="status" aria-live="polite" hidden></p>
+      </main>
+
+      <footer class="app-footer">
+        <p>Generated locally in your browser · No data is sent anywhere</p>
+      </footer>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
